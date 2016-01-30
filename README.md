@@ -1,0 +1,2 @@
+# BonVoyage
+Bon Voyage is a common platform where people meet trustworthy travel service providers.  People can post their requirement which includes Date of Travel , Approximate Budget and Places of Interest (Optional). Travel Service Providers pitch in their travel package through Bon Voyage.  Customers can compare different packages and similar packages can be bid upon by agents so that customers get an optimal price.
