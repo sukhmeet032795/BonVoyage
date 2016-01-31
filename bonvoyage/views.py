@@ -148,3 +148,93 @@ def dashboardTraveller(request):
 		'reqobj' :reqobj,
 		'count': count1
 	});
+
+def dashboardAgent(request):
+
+	user=request.user;
+	requirementObj=travelReq.objects.filter(status=0).order_by('-startDate');
+	reqobj=[];
+	for u in requirementObj:
+		packageExist=0;
+		packageSelected=0;
+		userPackage=travelPackage.objects.filter(travelReqId=u.id, userId=user.id);
+		if(len(userPackage)!=0):
+			packageExist=1;
+			userPackage=userPackage[0];
+			if(userPackage.selectedForBid ==1 ):
+				packageSelected=1;
+
+		count= travelPackage.objects.filter(travelReqId=u.id).count();
+		id=u.id;	
+		obj={
+
+			'startDate':u.startDate,
+			'endDate':u.endDate,
+			'budget':u.budget,
+			'name':u.reqName,
+			'count':count,
+			'package':packageExist,
+			'packageSelect':packageSelected,
+			'places': u.placeToVisit,
+			'id':id
+		}
+		reqobj.append(obj)
+	print(reqobj);	
+	return render(request,'DashboardAgent.html',{
+
+		'firstName':user.first_name,
+		'lastName':user.last_name,
+		'reqobj' :reqobj 
+	});	
+
+def bid(request):
+	userId=request.user.id;
+	id=request.GET.get("q");
+	traveller= travelReq.objects.filter(id=id)[0];
+	packages=travelPackage.objects.filter(travelReqId=traveller.id).order_by('price');
+	place=traveller.placeToVisit;
+	places=place.split( );
+	user_Traveller= User.objects.filter(id=traveller.userId.id)[0];
+	name= user_Traveller.username;
+	travellerObj={
+
+		'name' : name,
+		'startDate': traveller.startDate,
+		'endDate' : traveller.endDate,
+		'cities':places
+	}
+	packageArray=[];
+	count=0;
+	for p in packages:
+		count+=1;
+		discount=0;
+		savings=0;
+		user_Agent= User.objects.filter(id=p.userId.id)[0];
+		name= user_Agent.first_name + " " + user_Agent.last_name;
+		# if(int(p.bidPrice)!=0):
+		discount=int(100-((int(p.price)-int(p.bidPrice))/int(p.price))*100);
+		savings=(int(p.price)-int(p.bidPrice));
+		newPrice=(int(p.price)-int(p.bidPrice));
+		obj={
+			'Id':p.id,
+			'Username':name,
+			'Packagename':p.name,
+			'Price':p.price,
+			'BidPrice':p.bidPrice,
+			'Discount':discount,
+			'Savings':savings
+		}
+		packageArray.append(obj);
+	packageArray.sort(key=lambda x: x['Savings'], reverse=False)
+	print(packageArray)
+	return render(request,'biddingViewTraveller.html',{
+
+			'firstName':request.user.first_name,
+			'lastName':request.user.last_name,
+			'travelAgents':packageArray,
+			'traveller': travellerObj,
+			'agentCount':count	
+		});	
+
+def userRequirement(request):
+	return render(request,'userRequirement.html');
