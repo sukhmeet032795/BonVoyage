@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>Bon Voyage</title>
+	 	<link rel="shortcut icon" type="image/x-icon" href="{{STATIC_URL}}images/favicon.ico" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="..{{STATIC_URL}}css/home.css">
+		<link rel="stylesheet" href="..{{STATIC_URL}}css/bootstrap-social.css">
+		
+		<script src="..{{STATIC_URL}}js/jquery-1.11.1.min.js"></script>
+		<script src="..{{STATIC_URL}}js/home.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="containerDiv">
+			<div class="row imageContainer">
+				<div class="col-md-6" id="coverImage">
+					<!-- <img src="{{STATIC_URL}}images/background.jpg" alt="BonVoyage CoverPic"> -->
+				</div>
+  				<div class="col-md-6" id="coverSlider">
+  					<div class="row">
+  						<div class="col-md-4 leftPic commonPic">
+  							<img src="{{STATIC_URL}}images/image8.jpg" width='100%' height='183px' alt="Tourist Destination">
+  						</div>
+  						<div class="col-md-4 midPic commonPic">
+  							<img src="{{STATIC_URL}}images/image1.jpg" width='100%' height='183px' alt="Tourist Destination">
+  						</div>
+  						<div class="col-md-4 rightPic commonPic">
+  							<img src="{{STATIC_URL}}images/image5.jpg" width='100%' height='183px' alt="Tourist Destination">
+  						</div>
+  					</div>
+  					<div class="row">
+  						<div class="col-md-4 leftPic commonPic">
+  							<img src="{{STATIC_URL}}images/IMAGES/BAYAHIBE.jpg" width='100%' height='183px' alt="Tourist Destination">
+  						</div>
+  						<div class="col-md-4 midPic commonPic">
+  							<img src="{{STATIC_URL}}images/IMAGES/CHARLESTON.jpg" width='100%' height='183px' alt="Tourist Destination">
+  						</div>
+  						<div class="col-md-4 rightPic commonPic">
+  							<img src="{{STATIC_URL}}images/IMAGES/JODHPUR.jpg" width='100%' height='183px' alt="Tourist Destination">
+  						</div>
+  					</div>
+  				</div>
+			</div>
+			<div class="tabsContainer">
+				<div class="row">
+					<div class="col-md-2 oddTile tile" data-toggle="modal" data-target="#signupForm">
+						<i class="fa fa-arrow-circle-up faIcon"></i>
+						<p class="tileText">Sign Up</p>
+					</div>
+					<div class="col-md-2 evenTile tile" data-toggle="modal" data-target="#loginForm">
+						<i class="fa fa-sign-in faIcon"></i>
+						<p class="tileText">Login</p>
+					</div>
+					<div class="col-md-2 oddTile tile">
+						<i class="fa fa-question-circle faIcon"></i>
+						<p class="tileText">Verify Yourself</p>
+					</div>
+					<div class="col-md-2 evenTile tile" id="postRequirement">
+						<i class="fa fa-pencil faIcon"></i>
+						<p class="tileText">Post Requirement</p>
+					</div>
+					<div class="col-md-2 oddTile tile">
+						<i class="fa fa-space-shuttle faIcon"></i>
+						<p class="tileText">Recommendations Destinations</p>
+					</div>
+					<div class="col-md-2 evenTile tile" id="postQuotation">
+						<i class="fa fa-pencil faIcon"></i>
+						<p class="tileText">Post Quotation and Bid</p>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<p>Copyright © 2016 | BonVoyage | All Rights Reserved</p>
+			</div>	
+		</div>
+      <!-- Modal content-->
+		<div class="modal fade" id="signupForm" role="dialog" aria-labelledby="signupForm">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content" >
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<div class="modal-title row" id="myModalLabel">
+							<div class="form-top-container row">	
+								<div class="form-top-left">
+	                        		<h3 id="form-top-signup">Sign up now</h3>
+	                            	<p>Fill in the form below to get instant access:</p>
+	                        	</div>
+	                        	<div class="form-top-right">
+	                        		<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+	                        	</div>
+                        	</div>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3"></div>
+								<div class="dropdown col-md-6">
+									<label for="sel1">Traveller Or Travel-Agent:</label>
+										<select class="form-control" id="sel1">
+											<option>Traveller</option>
+											<option>Travel-Agent</option>
+										</select>
+								</div>
+								<div class="col-md-3"></div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="sr-only" for="form-first-name">First Name</label>
+									<input type="text" class="form-control" id="form-first-name" placeholder="First Name">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="sr-only" for="form-last-name">Last Name</label>
+									<input type="text" class="form-control" id="form-last-name" placeholder="Last Name">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="sr-only" for="form-email">Email Address</label>
+									<input type="text" class="form-control" id="form-email" placeholder="Email Address">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="sr-only" for="form-mobile">Mobile Number</label>
+									<input type="number" class="form-control" id="form-mobile" placeholder="Mobile Number">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 col-md-offset-3">
+								<div class="form-group">
+									<label class="sr-only" for="pass">Password</label>
+									<input type="password" class="form-control" id="pass" placeholder="Password">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4"></div>
+							<div class="col-md-4">
+								<button class="btn submit signupCustom" type="submit" style="margin-left:12%">Sign me up!</button>
+							</div>
+							<div class="col-md-4"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="loginForm" tabindex="-1" role="dialog" aria-labelledby="loginForm">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<div class="modal-title row" id="myModalLabel">
+							<div class="form-top-container row">	
+								<div class="form-top-left">
+	                        		<h3 id="form-top-signup">Login now</h3>
+	                            	<p>Fill in the form below to get instant access:</p>
+	                        	</div>
+	                        	<div class="form-top-right">
+	                        		<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+	                        	</div>
+                        	</div>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="sr-only" for="form-username">UserName</label>
+									<input type="text" class="form-control" id="form-username" placeholder="UserName">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="sr-only" for="form-password">Password</label>
+									<input type="password" class="form-control" id="form-password" placeholder="Password">
+								</div>
+							</div>	
+						</div>
+						<div class="row" style="margin-bottom: 4%">
+							<div class="col-md-4"></div>
+							<div class="col-md-4" style="margin-left:4%">
+								<button class="btn submit login" type="submit">Login now!</button>
+							</div>
+							<div class="col-md-4"></div>
+						</div>
+						<div class="row">
+							<div class="form-social">
+								<form role="form" id="form-social">
+									<div class="form-group form-social-icons">
+										<a class="btn btn-social btn-facebook form-social-icon facebook-icon">
+											<i class="fa fa-facebook"></i> Facebook Sign In!
+										</a>	
+										<a class="btn btn-social btn-google form-social-icon google-icon">
+											<i class="fa fa-google"></i> Google Sign In!
+										</a>	
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</body>
+</html>
