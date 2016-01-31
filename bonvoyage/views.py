@@ -238,3 +238,84 @@ def bid(request):
 
 def userRequirement(request):
 	return render(request,'userRequirement.html');
+
+def bid_agent(request):
+	
+	user=request.user;
+	id=request.GET.get("q");
+	travelreq= travelReq.objects.filter(id=id)[0];
+	# travelpackageid=request.GET.get('q');
+	packages=travelPackage.objects.filter(travelReqId=travelreq.id).order_by('price');
+	place=travelreq.placeToVisit;
+	places=place.split( );
+	user_Traveller= User.objects.filter(id=travelreq.userId.id)[0];
+	name= user_Traveller.username;
+	travellerObj={
+
+		'name' : name,
+		'startDate': travelreq.startDate,
+		'endDate' : travelreq.endDate,
+		'cities':places
+	}
+	packageArray=[];
+	count=0;
+	for p in packages:
+		count+=1;
+		user=0;
+		discount=0;
+		savings=0;
+		user_Agent= User.objects.filter(id=p.userId.id)[0];
+		name= user_Agent.first_name + " " + user_Agent.last_name;
+		if (request.user.email == p.userId.email):
+			user=1;
+		# if(int(p.bidPrice)!=0):
+		discount=int(100-((int(p.price)-int(p.bidPrice))/int(p.price))*100);
+		savings=(int(p.price)-int(p.bidPrice));
+		newPrice=(int(p.price)-int(p.bidPrice));
+		
+		obj={
+			'Id':p.id,
+			'Username':name,
+			'Packagename':p.name,
+			'Price':p.price,
+			'BidPrice':p.bidPrice,
+			'Discount':discount,
+			'yser':user,
+			'Savings':savings
+		}
+		packageArray.append(obj);
+	print(packageArray)
+	packageArray.sort(key=lambda x: x['Savings'], reverse=False)
+	
+	return render(request,'biddingViewTravelAgent.html',{
+
+			'firstName':request.user.first_name,
+			'lastName':request.user.last_name,
+			'travelAgents':packageArray,
+			'traveller': travellerObj,
+			'agentCount':count	
+		});
+
+def submitReq (request):
+	user = request.user
+	startDate = request.GET.get('startDate')
+	endDate = request.GET.get('endDate')
+	budget = request.GET.get('budget')
+	cities = json.loads(request.GET.get('cities'))
+	placeToVisit = ""
+	for c in cities:
+		placeToVisit += c + " "
+	requirementObj = travelReq.objects.create(userId = user, startDate = startDate, endDate = endDate, budget = budget, placeToVisit = placeToVisit)
+	requirementObj.save()
+	print(startDate, endDate, budget, cities)
+	return HttpResponse(json.dumps({"status": 1}), content_type="application/json")
+
+def submitBid (request):
+	user = request.user
+	value = request.GET.get('value')
+	id = request.GET.get('id')
+	package=travelPackage.objects.filter(id=id)[0];
+	package.bidPrice=value;
+	package.save();
+	return HttpResponse(json.dumps({"status": 1}), content_type="application/json")	
+
