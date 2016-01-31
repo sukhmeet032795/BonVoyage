@@ -83,3 +83,68 @@ def checkPackage(request):
 		
 	package.save();	
 	return HttpResponse(json.dumps({"status": 1}), content_type="application/json")
+
+def dashboardTravellerSelect(request):
+	
+	user=request.user;
+	id=request.GET.get("q");
+	package=travelPackage.objects.filter(travelReqId=id,selectedForBid=0).order_by('price');
+	packages=[];
+	for p in package:
+		obj={
+
+			'id':p.id,
+			'name':p.name,
+			'price':p.price
+		}	
+		packages.append(obj);
+
+	return render(request,'DashboardTravellerSelect.html',{
+
+		'firstName':user.first_name,
+		'lastName':user.last_name,
+		'packages':packages 
+});	
+
+
+def dashboardTraveller(request):
+	
+	print(request.user)
+	user=User.objects.filter(id=request.user.id)[0];
+	userReq=travelReq.objects.filter(userId=user.id).order_by('-startDate');
+	date=datetime.date.today();
+	reqobj=[];
+	count1 = -1
+	if (userReq.count() == 0):
+		count1 = 0
+		return  HttpResponseRedirect('/userRequirement')
+	
+	else:
+		for u in userReq:
+			end=0
+			
+			print(u.endDate)
+			if(u.endDate == "14 October,2015" or u.endDate == "16 October,2015" or u.endDate == "17 October,2015"):
+				end=1;
+			count= travelPackage.objects.filter(travelReqId=u.id).count();
+			id=u.id;	
+			obj={
+
+				'startDate':u.startDate,
+				'endDate':u.endDate,
+				'budget':u.budget,
+				'name':u.reqName,
+				'status':u.status,
+				'count':count,
+				'end':end,
+				'id':id
+			}
+			reqobj.append(obj)
+
+	return render(request,'DashboardTraveller.html',{
+
+		'firstName':user.first_name,
+		'lastName':user.last_name,
+		'reqobj' :reqobj,
+		'count': count1
+	});
