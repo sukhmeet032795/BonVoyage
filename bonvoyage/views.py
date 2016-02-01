@@ -588,4 +588,58 @@ def feedback_render (request):
 
 		'id':id
 	});
-	
+
+@require_POST
+def uploadVerify( request ):
+
+    # The assumption here is that jQuery File Upload
+    # has been configured to send files one at a time.
+    # If multiple files can be uploaded simulatenously,
+    # 'file' may be a list of files.
+    print("request.user")
+    file = upload_receive( request )
+    # return
+    # feedbackObj = feedback.objects.create(userId = request.user)
+    # feedbackObj.save()
+    # print(feedbackObj)
+    instance = agent_files( fileUpload = file , userId = request.user)
+    instance.save()
+
+    basename = os.path.basename( instance.fileUpload.path )
+
+    file_dict = {
+        'name' : basename,
+        'size' : file.size,
+
+        'url': settings.MEDIA_URL + basename,
+        'thumbnailUrl': settings.MEDIA_URL + basename,
+
+        # 'deleteUrl': reverse('jfu_delete', kwargs = { 'pk': instance.pk }),
+        # 'deleteType': 'POST',
+    }
+
+    return UploadResponse( request, file_dict )
+
+def agentVerification (request):
+	return render(request,'agentVerification.html');
+
+def submitFeedback(request):
+
+	id=request.GET.get("id");
+	ratingAgent=request.GET.get("ratingAgent");
+	ratingUs=request.GET.get("ratingUs");
+	review=request.GET.get("review");
+
+	id=int(id);
+	ratingAgent=int(ratingAgent);
+	userReq=travelReq.objects.filter(id=id)[0];
+	print(userReq.userId)
+	package= travelPackage.objects.filter(travelReqId=userReq)[0];
+	print(package);
+	user=User.objects.filter(id=package.userId.id)[0];
+	name=user.first_name + " " + user.last_name;
+
+	feedbackObj = feedback.objects.create(userId = request.user,userReqId= userReq, agentId=name, agentRating= ratingAgent, agentReview= review )
+	feedbackObj.save();
+
+	return HttpResponse(json.dumps({"status": 1}), content_type="application/json")
