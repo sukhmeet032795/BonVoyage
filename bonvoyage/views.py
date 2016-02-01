@@ -387,3 +387,105 @@ def viewPackage(request):
 	}
 
 	return HttpResponse(json.dumps(obj), content_type="application/json")
+
+def viewAgentPackage(request):
+	
+	id = request.GET.get('id');
+	package=travelPackage.objects.filter(id=id)[0];
+	flightdetails=flightDetails.objects.filter(travelPackageId=package.id);	
+	hoteldetails=hotelDetails.objects.filter(travelPackageId=package.id);	
+	daysDescription=daysSch.objects.filter(travelPackageId=package.id);	
+	user= User.objects.filter(id=package.userId.id)[0];
+	name= user.first_name + " " + user.last_name;
+	flights=[];
+	for flight in flightdetails:
+		objflight={
+			"DepartureAirport":flight.fromPlace,
+			"ArrivalAirport":flight.toPlace,
+			"SeatType":flight.type
+		}
+		flights.append(objflight);
+
+	hotels=[];	
+	for hotel in hoteldetails:
+		objhotel={
+			"HotelName":hotel.name,
+			"HotelCity":hotel.place,
+			"HotelRoomType":hotel.roomType,
+			"HotelNoDays":hotel.numOfDays
+		}
+		hotels.append(objhotel);	
+
+	description=[];
+	for day in daysDescription:
+		objday={
+
+			"index":day.dayNum,
+			"Details":day.description	
+		}	
+		description.append(objday);
+
+	obj={
+
+		'Name':name,
+		'PackageName':package.name,
+		'Price':package.price,
+		'Bid':package.bidPrice,
+		'Remarks':package.remarks,
+		'Airports':flights,
+		'Hotels':hotels,
+		'Days':description
+	}
+
+	return HttpResponse(json.dumps(obj), content_type="application/json")
+
+def viewAgentPackage1(request):
+	
+	id = request.GET.get('id');
+	package=travelPackage.objects.filter(id=id)[0];
+	flightdetails=flightDetails.objects.filter(travelPackageId=package.id);	
+	hoteldetails=hotelDetails.objects.filter(travelPackageId=package.id);	
+	daysDescription=daysSch.objects.filter(travelPackageId=package.id);	
+	user= User.objects.filter(id=package.userId.id)[0];
+	name= user.first_name + " " + user.last_name;
+	flights=[];
+	for flight in flightdetails:
+		objflight={
+			"DepartureAirport":flight.fromPlace,
+			"ArrivalAirport":flight.toPlace,
+			"SeatType":flight.type
+		}
+		flights.append(objflight);
+
+	hotels=[];	
+	for hotel in hoteldetails:
+		objhotel={
+			"HotelName":hotel.name,
+			"HotelCity":hotel.place,
+			"HotelRoomType":hotel.roomType,
+			"HotelNoDays":hotel.numOfDays
+		}
+		hotels.append(objhotel);	
+
+	description=[];
+	for day in daysDescription:
+		objday={
+
+			"index":day.dayNum,
+			"Details":day.description	
+		}	
+		description.append(objday);
+
+	obj={
+
+		'Name':name,
+		'PackageName':package.name,
+		'Price':package.price,
+		'Bid':package.bidPrice,
+		'Remarks':package.remarks,
+		'Airports':flights,
+		'Hotels':hotels,
+		'Days':description
+	}
+
+	return HttpResponse(json.dumps(obj), content_type="application/json")	
