@@ -488,4 +488,104 @@ def viewAgentPackage1(request):
 		'Days':description
 	}
 
-	return HttpResponse(json.dumps(obj), content_type="application/json")	
+	return HttpResponse(json.dumps(obj), content_type="application/json")
+
+def getConditions(request):
+	lat = request.GET.get('lat')
+	lon = request.GET.get('lon')
+	startDate = request.GET.get('startDate')
+	content = urlopen("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lon + "&sensor=true")
+	html = content.read()
+	jsonData = json.loads(html.decode())
+	jsonData = jsonData['results']
+	jsonData = jsonData[0]['address_components']
+	flag = 0
+	country = ""
+	code = ""
+	for j in jsonData:
+		type = j["types"]
+		for t in type:
+			if (t == "country"):
+				country = j["long_name"]
+				code = j["short_name"]
+				flag = 1
+				break
+		if (flag == 1):
+			break
+	isoObj = isoCode.objects.filter(code__startswith = code)[0]
+	month = int(startDate)
+	if (month < 10):
+		year = "2016"
+	else:
+		year = "2015"
+	# isoObj.code
+	encoded = base64.b64encode(b'lhjwdOWWyW8gIysExeXk-6clGoWLol3gLadUmq5y:bhavya')
+	encoded = encoded.decode()
+	r=requests.request('GET', "https://api.qalendra.com/assets?date=" + year + "-" + startDate + "-28&countryCode=" + isoObj.code + "&perPage=50", headers={"Authorization": "Basic " + encoded});
+	jsonCondition = json.loads(r.text)
+	print(jsonCondition)
+	finalArray = []
+	for d in jsonCondition['data']:
+		city = d['location']['address']['city']
+		state = d['location']['address']['state']
+		country = d['location']['address']['country']
+		if(city == None):
+			city = ""
+		if(state == None):
+			state = ""
+		else:
+			state = ", " + state
+		if(country == None):
+			country = ""
+		else:
+			country = ", " + country
+		print(d)
+		temp = {
+			"placeName": d['name'],
+			"verdict": d['predictions']['data'][0]['verdict'],
+			"address": city + state + country,
+			# "score": int(d['predictions']['data'][0]['score'])
+		}
+		finalArray.append(temp)
+	print(finalArray)
+	# finalArray.sort(key=lambda x: x.score, reverse=True)
+	# print(finalArray)
+	return HttpResponse(json.dumps(finalArray), content_type="application/json")
+
+@require_POST
+def upload( request ):
+
+    # The assumption here is that jQuery File Upload
+    # has been configured to send files one at a time.
+    # If multiple files can be uploaded simulatenously,
+    # 'file' may be a list of files.
+    print(request.user)
+    file = upload_receive( request )
+
+    feedbackObj = feedback.objects.create(userId = request.user)
+    feedbackObj.save()
+    instance = feedback_files( fileUpload = file , feedbackId = feedbackObj)
+    instance.save()
+
+    basename = os.path.basename( instance.fileUpload.path )
+
+    file_dict = {
+        'name' : basename,
+        'size' : file.size,
+
+        'url': settings.MEDIA_URL + basename,
+        'thumbnailUrl': settings.MEDIA_URL + basename,
+
+        # 'deleteUrl': reverse('jfu_delete', kwargs = { 'pk': instance.pk }),
+        # 'deleteType': 'POST',
+    }
+    return UploadResponse( request, file_dict )
+
+def feedback_render (request):
+
+	id=request.GET.get("q");
+	return render(request,'feedback.html',{
+
+		'id':id
+	});
+	
