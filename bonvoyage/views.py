@@ -337,3 +337,53 @@ def makePackage (request):
 
 		'travelReqId':id
 	})
+
+def getAirports (request):
+	arr = []
+	for a in airportDetails.objects.filter(city__icontains=request.GET.get('q')):
+		arr.append(a.code + " " + a.name + " " + a.city + " " + a.country)
+
+	return HttpResponse(json.dumps({"data": {"airport":arr}}), content_type="application/json")
+
+def submitPackage (request):
+
+	travelReqId = request.GET.get('travelReqId')
+	packageName = request.GET.get('packageName')
+	packagePrice = request.GET.get('packagePrice')
+	flightDetailsData = json.loads(request.GET.get('flightDetails'))
+	hotelDetailsData = json.loads(request.GET.get('hotelDetails'))
+	tourGuide = json.loads(request.GET.get('tourGuide'))
+	# print(packagePrice, packageName, flightDetails, tourGuide, hotelDetails)
+	travelReqObj = travelReq.objects.filter(id = travelReqId)[0]
+	travelPackageObj = travelPackage.objects.create(travelReqId= travelReqObj,userId = request.user, name = packageName, price = packagePrice)
+	travelPackageObj.save()
+	print(travelPackageObj.id)
+	for f in flightDetailsData:
+		# print(f[])
+		flightObj = flightDetails.objects.create(fromPlace = f['departure'], toPlace = f['arrival'], type = f['type'], travelPackageId = travelPackageObj)
+		flightObj.save();
+	for h in hotelDetailsData:
+		hotelObj = hotelDetails.objects.create(name = h['hotelName'], place = h['hotelCity'], roomType = h['roomType'], numOfDays = h['numOfDaysNights'], travelPackageId = travelPackageObj)
+		hotelObj.save()
+	for d in tourGuide:
+		daysSchObj = daysSch.objects.create(dayNum = d['day'], description = d['description'], travelPackageId = travelPackageObj)
+		daysSchObj.save()
+
+	return HttpResponse(json.dumps({"status": 1}), content_type="application/json")
+
+def viewPackage(request):
+	
+	id = request.GET.get('id')
+	package=travelPackage.objects.filter(id=id)[0];
+	user= User.objects.filter(id=package.userId.id)[0];
+	name= user.first_name + " " + user.last_name;
+	obj={
+
+		'agentName':name,
+		'agentPackageName':package.name,
+		'agentPrice':package.price,
+		'agentBid':package.bidPrice,
+		'agentRemarks':package.remarks
+	}
+
+	return HttpResponse(json.dumps(obj), content_type="application/json")
