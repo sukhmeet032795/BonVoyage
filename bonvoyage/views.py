@@ -643,3 +643,186 @@ def submitFeedback(request):
 	feedbackObj.save();
 
 	return HttpResponse(json.dumps({"status": 1}), content_type="application/json")
+
+def imageProcessing (request):
+	imageName = request.GET.get('imageName')
+	print("bbb")
+	agentFile = agent_files.objects.filter(userId = request.user)
+	print(agentFile[0].filename()) 
+	for a in agentFile:
+		if (a.filename() == imageName):
+			currentFile = a
+			break
+	encoded = base64.b64encode(b'Bon Voyage:A2FDjUlOxccsxn/DhYhZdGhI')
+	encoded = encoded.decode()
+	print(encoded)
+	r = requests.request('POST', 'https://cloud.ocrsdk.com/processImage?language=english&exportformat=xml', files={'file': open(a.fileUpload.path, 'rb')}, headers={"Authorization": "Basic " + encoded})
+	print(r.text)
+	data = xmltodict.parse(r.text)
+	# e = xml.etree.ElementTree.parse(r.text).getroot()
+	while (1):
+		r = requests.request('GET', 'http://cloud.ocrsdk.com/getTaskStatus?taskId=' + data['response']['task']['@id'], headers={"Authorization": "Basic " + encoded})
+		data = xmltodict.parse(r.text)
+		if (data['response']['task']['@status'] == "Completed"):
+			break
+	print(data)
+	print(data['response']['task']['@resultUrl'])
+	r = requests.request('GET', data['response']['task']['@resultUrl'])
+	data = xmltodict.parse(r.text)
+	for b in data['document']['page']['block']:
+		# print(b['text'])
+		# print(type(b['text']['par']))
+		# ['line'][0]['formatting']['charParams'][0]
+		try:
+			text = b['text']
+		except:
+			continue
+		try:
+			par = text['par'][0]
+		except:
+			par = text['par']
+		# print(par)
+		try:
+			line = par['line']
+		except:
+			continue
+		try:
+			lineNum = line[0]
+		except:
+			lineNum = line
+		# print(line)
+		try:
+			char1 = lineNum['formatting']['charParams'][0]
+			char2 = lineNum['formatting']['charParams'][1]
+			# print(char1, char2)
+			if (char1['#text'] != 'D' or char2['#text'] != 'L'):
+				continue
+		except:
+			char = lineNum['formatting']['charParams']
+			continue
+		licenceNum = ""
+		for i in lineNum['formatting']['charParams']:
+			licenceNum += i['#text']
+		print(licenceNum)
+		name = ''
+		for i in line[1]['formatting']['charParams']:
+			# print(i)
+			try:
+				name += i['#text']
+			except:
+				name += " "
+		print(name)
+		fathersName = ''
+		for i in line[2]['formatting']['charParams']:
+			# print(i)
+			try:
+				fathersName += i['#text']
+			except:
+				fathersName += " "
+		print(fathersName)
+		dob = ''
+		for i in line[3]['formatting']['charParams']:
+			# print(i)
+			try:
+				dob += i['#text']
+			except:
+				dob += " "
+		print(dob)
+		address = ''
+		try:
+			abc = text['par'][2]['line'][0]
+			lineAdd = text['par'][2]['line']
+		except:
+			lineAdd = []
+			lineAdd.append(text['par'][2]['line'])
+		for l in lineAdd:
+			for i in l['formatting']['charParams']:
+				# print(i)
+				try:
+					address += i['#text']
+				except:
+					address += " "
+			address += " "
+		print(address)
+		break
+	temp = {
+		'licenceNum': licenceNum,
+		'name': name,
+		'fathersName': fathersName,
+		'dob': dob,
+		'address': address
+	}
+	return HttpResponse(json.dumps(temp), content_type="application/json")
+
+def submitAgentDetails(request):
+	licenceNum = request.GET.get('licenceNum')
+	name = request.GET.get('name')
+	fathersName = request.GET.get('fathersName')
+	address = request.GET.get('address')
+	dob = request.GET.get('dob')
+	panNum = request.GET.get('panNum')
+	namePan = request.GET.get('namePan')
+	fathersNamePan = request.GET.get('fathersNamePan')
+	dobPan = request.GET.get('dobPan')
+	agentObj = agent_details.objects.create(userId = request.user, licenceNum = licenceNum, name = name, fathersName = fathersName, address = address, dob = dob, panNum = panNum, namePan = namePan, fathersNamePan = fathersNamePan, dobPan = dobPan)
+	agentObj.save()
+	temp = {
+		"statusCus": 1
+	}
+	return HttpResponse(json.dumps(temp), content_type="application/json")
+
+def submitAgentDetailsPan(request):
+	PanCardNo = request.GET.get('PanCardNo')
+	name = request.GET.get('name')
+	fathersName = request.GET.get('fathersName')
+	dob = request.GET.get('dob')
+	agent = agent_details.objects.filter(userId = request.user, name = name, fathersName = fathersName)
+	agentObj = agent_details.objects.create(userId = request.user, licenceNum = licenceNum, name = name, fathersName = fathersName, address = address, dob = dob)
+	agentObj.save()
+	temp = {
+		"statusCus": 1
+	}
+	return HttpResponse(json.dumps(temp), content_type="application/json")	
+
+def destinations(request):
+
+	url= settings.STATICFILES_DIRS[0]+ '/js/travelDestinations.json';
+	destination = json.loads(open( url ).read())
+	length=len(destination)
+	categories=['Weekend-Getaways','Romantic','Relax','Cultural','Disappear','Adventure','City','With-Friends','With-Family']
+	length_i=len(categories)
+	i=0;
+	dest=[];
+
+	while(i<length_i):
+
+		j=0;
+		individual=[];
+		obj={};
+		while(j<length):
+
+			if(destination[j]['Type'] == categories[i]):
+
+				url="/static/images/IMAGES/"+destination[j]["Image"]
+				obj={
+
+					'name' : destination[j]["Name"],
+					'image' : url
+				}
+				individual.append(obj)
+
+			j+=1;
+
+		objFinal={
+		
+			'type':categories[i],
+			'des': individual
+		}
+
+		i=i+1;
+		dest.append(objFinal);
+
+	return render(request,'destinations.html',{
+
+		'data':dest
+	});
