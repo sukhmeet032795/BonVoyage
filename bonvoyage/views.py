@@ -979,3 +979,78 @@ def loginCustom (request):
 				'url': "/dashboardAgent"
 			}
 	return HttpResponse(json.dumps(temp), content_type="application/json")
+# def createDatabase():
+
+def approve(request):
+	id = request.GET.get('id')
+	userObj = User.objects.filter(id = id)[0]
+	userDetailsObj = UserDetails.objects.filter(user = userObj)[0]
+	userDetailsObj.is_verified = True
+	userDetailsObj.save()
+	temp = {
+		'status': 1
+	}
+	return HttpResponse(json.dumps(temp), content_type="application/json")
+
+def logout(request):
+	auth.logout(request);
+	return HttpResponse(json.dumps({'status':1}), content_type="application/json");	
+
+def users():
+
+	user=User.objects.create(username = "sukhmeet",email = "s@gmail.com",first_name= "Sukhmeet",last_name= "Singh",is_active=True);
+	user.set_password("123")
+	user.save()
+	userDetails=UserDetails.objects.create(type="Traveller",user= user,is_verified=True)
+
+	user1=User.objects.create(username = "bhavya",email = "b@gmail.com", first_name= "Bhavya",last_name= "Gupta",is_active=True);
+	user1.set_password("123")
+	user1.save()
+	userDetails1=UserDetails.objects.create(type="Traveller",user= user1,is_verified=True)
+
+	user2=User.objects.create(username = "aanchal",email = "a@gmail.com", first_name= "Aanchal",last_name= "Somani",is_active=True);
+	user2.set_password("123")
+	user2.save()
+	userDetails2=UserDetails.objects.create(type="Traveller",user= user2,is_verified=True)
+
+	user3=User.objects.create(username = "vinay",email = "v@gmail.com", first_name= "Vinay",last_name= "Kumar",is_active=True);
+	user3.set_password("123")
+	user3.save()
+	userDetails3=UserDetails.objects.create(type="Travel-Agent",user= user3,is_verified=True)
+
+	user4=User.objects.create(username = "rajesh",email = "r@gmail.com", first_name= "Rajesh",last_name= "Birok",is_active=True);
+	user4.set_password("123")
+	user4.save()
+	userDetails4=UserDetails.objects.create(type="Travel-Agent",user= user4,is_verified=True)
+
+	user5=User.objects.create(username = "himank",email = "h@gmail.com", first_name= "himank",last_name= "Bhalla",is_active=True);
+	user5.set_password("123")
+	user5.save()
+	userDetails5=UserDetails.objects.create(type="Travel-Agent",user= user5,is_verified=True)
+
+	travelreq1=travelReq.objects.create(userId = user, startDate = "25 October,2015", endDate ="16 November,2015",budget= "800000",reqName= "USA Tour",placeToVisit= "Buena Vista, CO 81211, USA Bouton, IA 50039, USA Fort Smith, Unorganized, NT, Canada")	
+	travelreq2=travelReq.objects.create(userId = user, startDate = "9 September,2015", endDate ="14 October,2015",budget= "750000",reqName= "Europe",placeToVisit= "Rosdorf, Germany 87-100 Toruń, Poland")	
+	travelreq3=travelReq.objects.create(userId = user1, startDate = "27 November,2015", endDate ="31 December,2015",budget= "100000",reqName= "India",placeToVisit= "Shimla, Himachal Pradesh 171002, India Rampur, Himachal Pradesh, India Himachal Pradesh 175123, India")	
+	travelreq4=travelReq.objects.create(userId = user2, startDate = "26 November,2015", endDate ="1 December,2015",budget= "50000",reqName= "India",placeToVisit= "Manali")	
+
+	travelpack1=travelPackage.objects.create(travelReqId= travelreq1,userId= user3,name= "USA",price= "650000")
+	print(travelpack1)
+	travelpack2=travelPackage.objects.create(travelReqId= travelreq2,userId= user3,name= "Europe",price= "650000")
+	travelpack3=travelPackage.objects.create(travelReqId= travelreq1,userId= user4,name= "USA Tour",price= "750000")
+	travelpack4=travelPackage.objects.create(travelReqId= travelreq1,userId= user5,name= "United States",price= "700000")
+
+	airportdet=flightDetails.objects.create(fromPlace = "DEL Indira Gandhi Intl Delhi India",toPlace = "Boston South Station Boston United States",type = "Economic", travelPackageId =travelpack1 )
+	airportdet1=flightDetails.objects.create(fromPlace = "Boston South Station Boston United States",toPlace = "YCG Castlegar Castlegar Canada",type = "Economic", travelPackageId = travelpack1)
+	airportdet2=flightDetails.objects.create(fromPlace = "BOM Chhatrapati Shivaji Intl Mumbai India",toPlace = "DCA Washington United States",type = "First Class", travelPackageId = travelpack3)
+	airportdet3=flightDetails.objects.create(fromPlace = "MAA Chennai Intl Madras India",toPlace = "LGA La Guardia New York United States",type = "Business", travelPackageId = travelpack4)
+
+	hoteldet1=hotelDetails.objects.create(name= "Abc Hotel",place= "Boston",roomType= "Deluxe",numOfDays= 3,travelPackageId= travelpack1)
+	hoteldet2=hotelDetails.objects.create(name= "Def Hotel",place= "Canada",roomType= "Superior",numOfDays= 4,travelPackageId= travelpack1)
+	hoteldet3=hotelDetails.objects.create(name= "Efg Hotel",place= "Washington",roomType= "Superior",numOfDays= 5,travelPackageId= travelpack3)
+	hoteldet4=hotelDetails.objects.create(name= "Ijl HOtel",place= "New York",roomType= "Deluxe",numOfDays= 4,travelPackageId= travelpack4)
+
+	dayssc1=daysSch.objects.create(dayNum= "1", description= "SIC Crocodile Farm at million year stone park at 15.30 hrs after Coral Island",travelPackageId= travelpack1)
+	dayssc2=daysSch.objects.create(dayNum= "2", description= "Coral Island Tour with Indian Lunch on SIC",travelPackageId= travelpack1)
+	dayssc3=daysSch.objects.create(dayNum= "3", description= "Universal Studio with one way transfer from Hotel",travelPackageId= travelpack1)
+	dayssc4=daysSch.objects.create(dayNum= "1", description= "Half Day city tour on Seat In Coach;Noon till Sunset at Sentosa in Singapore on Seat In Coach",travelPackageId= travelpack3)
+	dayssc5=daysSch.objects.create(dayNum= "2", description= "Night Safari on Seat In Coach",travelPackageId= travelpack4)
