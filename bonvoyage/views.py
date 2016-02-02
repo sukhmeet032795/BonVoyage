@@ -26,7 +26,9 @@ from bs4 import BeautifulSoup
 import time
 
 def home(request):
-
+	usertemp = User.objects.filter(username = "admin")
+	if (len(usertemp) == 0):
+		users()
 	url= settings.STATICFILES_DIRS[0]+ '/js/travelDestinations.json';
 	destination = json.loads(open( url ).read())
 	length=len(destination)
@@ -850,8 +852,10 @@ def adminVerification(request):
 	temp = {}
 	address = ""
 	flag = 0
+	print (soup.select('input'))
+
 	for s in soup.select('input'):
-		if (counter == 5):
+		if (counter == 6):
 			status = 0
 			if (agentObj.licenceNum.replace(" ", "").lower() == s.get('value').replace(" ", "").lower()):
 				status = 1
@@ -861,7 +865,8 @@ def adminVerification(request):
 				'status': status
 			}
 			# print(s.get('value'))
-		if (counter == 9):
+		if (counter == 10):
+			print(s)
 			status = 0
 			if (agentObj.name.replace(" ", "").lower() == s.get('value').replace(" ", "").lower()):
 				status = 1
@@ -870,7 +875,7 @@ def adminVerification(request):
 				'auth': s.get('value'),
 				'status': status
 			}
-		if (counter == 10):
+		if (counter == 11):
 			status = 0
 			if (agentObj.fathersName.replace(" ", "").lower() == s.get('value').replace(" ", "").lower()):
 				status = 1
@@ -879,7 +884,7 @@ def adminVerification(request):
 				'auth': s.get('value'),
 				'status': status
 			}
-		if (counter == 11):
+		if (counter == 12):
 			status = 0
 			if (agentObj.dob.replace(" ", "").lower() == s.get('value').replace(" ", "").lower()):
 				status = 1
@@ -888,7 +893,7 @@ def adminVerification(request):
 				'auth': s.get('value'),
 				'status': status
 			}
-		if (counter == 12 or counter == 14 or counter == 15):
+		if (counter == 13 or counter == 15 or counter == 16):
 			address += s.get('value')
 			status = 0
 			if (s.get('value').replace(" ", "").lower() in agentObj.address.replace(" ", "").lower()):
@@ -907,6 +912,12 @@ def adminVerification(request):
 
 def allAgents(request):
 	user=request.user;
+	if (user.is_anonymous()):
+		user = auth.authenticate(username = "admin", password = "password")
+		print (user)
+		auth.login(request,user)
+	print(request.user)
+	print(user)
 	userList = UserDetails.objects.filter (is_verified = False)
 	finalArray = []
 	for u in userList:
@@ -997,36 +1008,40 @@ def logout(request):
 	return HttpResponse(json.dumps({'status':1}), content_type="application/json");	
 
 def users():
-
+	print ("------")
 	user=User.objects.create(username = "sukhmeet",email = "s@gmail.com",first_name= "Sukhmeet",last_name= "Singh",is_active=True);
-	user.set_password("123")
+	user.set_password("password")
 	user.save()
 	userDetails=UserDetails.objects.create(type="Traveller",user= user,is_verified=True)
 
 	user1=User.objects.create(username = "bhavya",email = "b@gmail.com", first_name= "Bhavya",last_name= "Gupta",is_active=True);
-	user1.set_password("123")
+	user1.set_password("password")
 	user1.save()
 	userDetails1=UserDetails.objects.create(type="Traveller",user= user1,is_verified=True)
 
 	user2=User.objects.create(username = "aanchal",email = "a@gmail.com", first_name= "Aanchal",last_name= "Somani",is_active=True);
-	user2.set_password("123")
+	user2.set_password("password")
 	user2.save()
 	userDetails2=UserDetails.objects.create(type="Traveller",user= user2,is_verified=True)
 
 	user3=User.objects.create(username = "vinay",email = "v@gmail.com", first_name= "Vinay",last_name= "Kumar",is_active=True);
-	user3.set_password("123")
+	user3.set_password("password")
 	user3.save()
 	userDetails3=UserDetails.objects.create(type="Travel-Agent",user= user3,is_verified=True)
 
 	user4=User.objects.create(username = "rajesh",email = "r@gmail.com", first_name= "Rajesh",last_name= "Birok",is_active=True);
-	user4.set_password("123")
+	user4.set_password("password")
 	user4.save()
 	userDetails4=UserDetails.objects.create(type="Travel-Agent",user= user4,is_verified=True)
 
 	user5=User.objects.create(username = "himank",email = "h@gmail.com", first_name= "himank",last_name= "Bhalla",is_active=True);
-	user5.set_password("123")
+	user5.set_password("password")
 	user5.save()
 	userDetails5=UserDetails.objects.create(type="Travel-Agent",user= user5,is_verified=True)
+
+	user6=User.objects.create(username = "admin",email = "a@gmail.com", first_name= "Admin",last_name= "Admin",is_active=True, is_superuser=True);
+	user6.set_password("password")
+	user6.save()
 
 	travelreq1=travelReq.objects.create(userId = user, startDate = "25 October,2015", endDate ="16 November,2015",budget= "800000",reqName= "USA Tour",placeToVisit= "Buena Vista, CO 81211, USA Bouton, IA 50039, USA Fort Smith, Unorganized, NT, Canada")	
 	travelreq2=travelReq.objects.create(userId = user, startDate = "9 September,2015", endDate ="14 October,2015",budget= "750000",reqName= "Europe",placeToVisit= "Rosdorf, Germany 87-100 Toruń, Poland")	
