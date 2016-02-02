@@ -1,0 +1,62 @@
+nav img{
+    width: 100px;
+    height: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 12px;
+    border: 2px solid beige;
+    margin-top: -12px;
+}
+
+.navbar {
+	background-color:#3E2723 !important;
+}
+
+.nav-container{
+	background-color:#3E2723 !important;
+	margin-left: -32px !important;
+	margin-right: -31px !important;
+}
+
+#dob {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+.alert-row {
+    margin-top: 60px !important;
+}
+
+td img {
+    height: 100px !important;
+}
+
+#submitReq {
+    margin-bottom: 10px;
+}
+
+#pre-loader{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    position: absolute;
+}
+
+@import url('//netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css');
+ .container {
+    margin-top: 30px;
+    width: 400px;
+}
+.bar {
+    width: 400px;
+    color: #FFF;
+}
+
+.progress-striped{
+    position: absolute;
+    margin-top: 25%;
+    margin-left: 25%;
+    padding: 30px;
+    background: brown !important;
+}
