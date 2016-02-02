@@ -246,3 +246,87 @@
     text-align: right;
 }
 /*==================================================*/
+
+@import url(http://fonts.googleapis.com/css?family=Nunito:300);
+
+a    { text-decoration: none; }
+
+
+.button
+{
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  color: #0C5;
+
+  font-size: 24px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 300;
+  
+  margin: 5em auto;
+  
+  position: absolute; 
+  top:10%; right:0; bottom:0; left:78%;
+  
+  padding: 20px 0;
+  width: 300px;
+  height:74px;
+
+  background: #E040FB;
+  border: 1px solid #E040FB;
+  color: #FFF;
+  overflow: hidden;
+  
+  transition: all 0.5s;
+}
+
+.button:hover, .button:active 
+{
+  text-decoration: none;
+  color: #E040FB;
+  border-color: #E040FB;
+  background: #FFF;
+}
+
+.button span 
+{
+  display: inline-block;
+  position: relative;
+  padding-right: 0;
+  
+  transition: padding-right 0.5s;
+}
+
+.button span:after 
+{
+  content: ' ';  
+  position: absolute;
+  top: 0;
+  right: -18px;
+  opacity: 0;
+  width: 10px;
+  height: 10px;
+  margin-top: -8px;
+
+  background: rgba(0, 0, 0, 0);
+  border: 3px solid #FFF;
+  border-top: none;
+  border-right: none;
+
+  transition: opacity 0.5s, top 0.5s, right 0.5s;
+  transform: rotate(225deg);
+}
+
+.button:hover span, .button:active span 
+{
+  padding-right: 30px;
+}
+
+.button:hover span:after, .button:active span:after 
+{
+  transition: opacity 0.5s, top 0.5s, right 0.5s;
+  opacity: 1;
+  border-color: #E040FB;
+  right: 0;
+  top: 50%;
+}

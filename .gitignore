@@ -60,3 +60,7 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+media/
+travelRequirement/migrations/0001_initial.py
+travelRequirement/migrations/__init__.py
+travelRequirement/migrations/__pycache__
