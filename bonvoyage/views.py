@@ -1054,3 +1054,86 @@ def users():
 	dayssc3=daysSch.objects.create(dayNum= "3", description= "Universal Studio with one way transfer from Hotel",travelPackageId= travelpack1)
 	dayssc4=daysSch.objects.create(dayNum= "1", description= "Half Day city tour on Seat In Coach;Noon till Sunset at Sentosa in Singapore on Seat In Coach",travelPackageId= travelpack3)
 	dayssc5=daysSch.objects.create(dayNum= "2", description= "Night Safari on Seat In Coach",travelPackageId= travelpack4)
+
+def imageProcessingPan(request):
+	imageName = request.GET.get('imageName')
+	print(imageName)
+	print("bbb")
+	agentFile = agent_files.objects.filter(userId = request.user)
+	print(agentFile[0].filename()) 
+	for a in agentFile:
+		if (a.filename() == imageName):
+			currentFile = a
+			break
+	encoded = base64.b64encode(b'Bon Voyage:A2FDjUlOxccsxn/DhYhZdGhI')
+	encoded = encoded.decode()
+	r = requests.request('POST', 'https://cloud.ocrsdk.com/processImage?language=english&exportformat=xml', files={'file': open(a.fileUpload.path, 'rb')}, headers={"Authorization": "Basic " + encoded})
+	print(r.text)
+	data = xmltodict.parse(r.text)
+	# e = xml.etree.ElementTree.parse(r.text).getroot()
+	while (1):
+		r = requests.request('GET', 'http://cloud.ocrsdk.com/getTaskStatus?taskId=' + data['response']['task']['@id'], headers={"Authorization": "Basic " + encoded})
+		data = xmltodict.parse(r.text)
+		if (data['response']['task']['@status'] == "Completed"):
+			break
+	print(data)
+	print("--------------------------")
+	print(data['response']['task']['@resultUrl'])
+	print("-----------------------------")
+	r = requests.request('GET', data['response']['task']['@resultUrl'])
+	data = xmltodict.parse(r.text)
+	block1 = data['document']['page']['block'][0]
+	block2 = data['document']['page']['block'][1]
+	name = ""
+	for b in block1['text']['par'][2]['line']['formatting']['charParams']:
+		try:
+			name += b['#text']
+		except:
+			name += " "
+	fathersName = ""
+	for b in block2['text']['par'][0]['line'][0]['formatting']['charParams']:
+		try:
+			fathersName += b['#text']
+		except:
+			fathersName += " "
+
+	dob = ""
+	for b in block2['text']['par'][0]['line'][1]['formatting']['charParams']:
+		try:
+			dob += b['#text']
+		except:
+			dob += " "
+	panNum = ""
+	for b in block2['text']['par'][2]['line']['formatting']['charParams']:
+		try:
+			panNum += b['#text']
+		except:
+			panNum += " "
+	temp = {
+		'panNum': panNum,
+		'name': name,
+		'fathersName': fathersName,
+		'dob': dob
+	}
+	print(temp)
+	return HttpResponse(json.dumps(temp), content_type="application/json")
+
+def adminVerificationPan(request):
+	agentId = request.GET.get('id')
+	print(User.objects.filter(id = agentId))
+	user = UserDetails.objects.filter(id = agentId)[0].user
+	print(user)
+	agentObj = agent_details.objects.filter(userId = user)[0]
+	webpage = r"https://incometaxindiaefiling.gov.in/e-Filing/Services/KnowYourPanLink.html"
+	dobsearchterm = agentObj.dobPan
+	surnamesearchtermArr = agentObj.namePan.split(' ')
+	surnamesearchterm = surnamesearchtermArr[1]
+	firstnamesearchterm = surnamesearchtermArr[0]
+	driver = webdriver.Chrome()
+	driver.get(webpage)
+	sbox = driver.find_element_by_css_selector("#dateField")
+	sbox.send_keys(dobsearchterm)
+	sbox1 = driver.find_element_by_css_selector("#KnowYourPan_userNameDetails_surName")
+	sbox1.send_keys(surnamesearchterm)
+	sbox2 = driver.find_element_by_css_selector("#KnowYourPan_userNameDetails_firstName")
+	sbox2.send_keys(firstnamesearchterm)
