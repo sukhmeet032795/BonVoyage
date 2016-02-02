@@ -72,7 +72,7 @@ function main(){
 
 	$("#postQuotation").click(function(){
 
-		var url="/makePackage";
+		var url="/dashboardAgent";
 		window.location=url;
 	})
 

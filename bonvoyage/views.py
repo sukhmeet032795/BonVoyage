@@ -154,6 +154,10 @@ def dashboardTraveller(request):
 def dashboardAgent(request):
 
 	user=request.user;
+	if (user.is_anonymous()):
+		user = auth.authenticate(username = "vinay", password = "password")
+		auth.login(request,user)
+
 	requirementObj=travelReq.objects.filter(status=0).order_by('-startDate');
 	reqobj=[];
 	for u in requirementObj:
@@ -300,6 +304,9 @@ def bid_agent(request):
 
 def submitReq (request):
 	user = request.user
+	if (user.is_anonymous()):
+		user = auth.authenticate(username = "sukhmeet", password = "password")
+		auth.login(request,user)
 	startDate = request.GET.get('startDate')
 	endDate = request.GET.get('endDate')
 	budget = request.GET.get('budget')
