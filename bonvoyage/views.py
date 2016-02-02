@@ -826,3 +826,156 @@ def destinations(request):
 
 		'data':dest
 	});
+
+def adminVerification(request):
+	agentId = request.GET.get('id')
+	print(User.objects.filter(id = agentId))
+	user = UserDetails.objects.filter(id = agentId)[0].user
+	print(user)
+	agentObj = agent_details.objects.filter(userId = user)[0]
+	webpage = r"https://dlpay.dimts.in/dldetail/default.aspx"
+	searchterm = agentObj.licenceNum
+	driver = webdriver.Chrome()
+	driver.get(webpage)
+	sbox = driver.find_element_by_css_selector("#ctl00_ContentPlaceHolder1_txtdlno")
+	sbox.send_keys(searchterm)
+	submit = driver.find_element_by_css_selector("#ctl00_ContentPlaceHolder1_Button1")
+	submit.click()
+	time.sleep(10)
+	page = driver.page_source
+	# print(page)
+	soup = BeautifulSoup(page)
+	# print(soup)
+	counter = 1
+	temp = {}
+	address = ""
+	flag = 0
+	for s in soup.select('input'):
+		if (counter == 5):
+			status = 0
+			if (agentObj.licenceNum.replace(" ", "").lower() == s.get('value').replace(" ", "").lower()):
+				status = 1
+			temp['licenceNum'] = {
+				'filled': agentObj.licenceNum,
+				'auth': s.get('value'),
+				'status': status
+			}
+			# print(s.get('value'))
+		if (counter == 9):
+			status = 0
+			if (agentObj.name.replace(" ", "").lower() == s.get('value').replace(" ", "").lower()):
+				status = 1
+			temp['name'] = {
+				'filled': agentObj.name,
+				'auth': s.get('value'),
+				'status': status
+			}
+		if (counter == 10):
+			status = 0
+			if (agentObj.fathersName.replace(" ", "").lower() == s.get('value').replace(" ", "").lower()):
+				status = 1
+			temp['fathersName'] = {
+				'filled': agentObj.fathersName,
+				'auth': s.get('value'),
+				'status': status
+			}
+		if (counter == 11):
+			status = 0
+			if (agentObj.dob.replace(" ", "").lower() == s.get('value').replace(" ", "").lower()):
+				status = 1
+			temp['dob'] = {
+				'filled': agentObj.dob,
+				'auth': s.get('value'),
+				'status': status
+			}
+		if (counter == 12 or counter == 14 or counter == 15):
+			address += s.get('value')
+			status = 0
+			if (s.get('value').replace(" ", "").lower() in agentObj.address.replace(" ", "").lower()):
+				status = 1
+
+			temp['address'] = {
+				'filled': agentObj.address,
+				'auth': address,
+				'status': status
+			}
+
+		counter += 1
+	print(temp)
+	temp['id'] = user.id
+	return render(request,'adminVerification.html', {'data': temp})
+
+def allAgents(request):
+	user=request.user;
+	userList = UserDetails.objects.filter (is_verified = False)
+	finalArray = []
+	for u in userList:
+		print(u.id, u.user)
+		try:
+			agentObj = agent_details.objects.filter(userId = u.user)[0]
+			temp = {
+				'id': u.id,
+				'namePan': agentObj.namePan,
+				'licenceNum': agentObj.licenceNum,
+				'panNum': agentObj.panNum,
+				'fathersNamePan': agentObj.fathersNamePan,
+				'address': agentObj.address,
+				'dobPan': agentObj.dobPan,
+			}
+			finalArray.append(temp)
+		except:
+			pass
+	print(finalArray)
+	return render(request,'viewAllUnverified.html', {
+		
+		'ver': finalArray,
+		'firstName':user.first_name,
+		'lastName':user.last_name
+	});
+
+def login(request):
+	email = request.GET.get('email')
+	password = request.GET.get('password')
+	firstName = request.GET.get('firstName')
+	lastName = request.GET.get('lastName')
+	number = request.GET.get('number')
+	type=request.GET.get('type')
+
+	print(email,password)
+	user=User.objects.create(username = email, first_name=firstName,last_name=lastName,is_active=True);
+	user.set_password(password)
+	user.save()
+	if (type == "Traveller"):
+		userDetails=UserDetails.objects.create(type=type,user=user,is_verified=True)
+	else:
+		userDetails=UserDetails.objects.create(type=type,user=user,is_verified=False)
+	user = auth.authenticate(username = email, password = password)
+	print(user)
+	auth.login(request,user)
+	temp = {
+		'status': 1
+	}
+	return HttpResponse(json.dumps(temp), content_type="application/json")
+
+def loginCustom (request):
+	# pass
+	email = request.GET.get('email')
+	password = request.GET.get('password')
+	user = auth.authenticate(username = email, password = password)
+	auth.login(request,user)
+	print(user)
+	if (user.is_superuser):
+		temp = {
+			'url': "/allAgents.html"
+		}
+	else:
+		userObj = UserDetails.objects.filter(user = user)[0].type
+		if (userObj == "Traveller"):
+			temp = {
+				'url': "/dashboardTraveller"
+			}
+		else:
+			temp = {
+				'url': "/dashboardAgent"
+			}
+	return HttpResponse(json.dumps(temp), content_type="application/json")
