@@ -40,6 +40,7 @@ urlpatterns = patterns('',
 	url(r'loginCustom/', 'bonvoyage.views.loginCustom'),
 	url(r'approve/', 'bonvoyage.views.approve'),
 	url(r'logout', 'bonvoyage.views.logout'),
+	url(r'chromeExtGetPackage', 'bonvoyage.views.chromeExtGetPackage'),
 )+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
     
 

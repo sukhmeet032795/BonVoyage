@@ -106,7 +106,7 @@ def dashboardTravellerSelect(request):
 		'firstName':user.first_name,
 		'lastName':user.last_name,
 		'packages':packages 
-});	
+	});	
 
 
 def dashboardTraveller(request):
@@ -1164,3 +1164,22 @@ def adminVerificationPan(request):
 	sbox1.send_keys(surnamesearchterm)
 	sbox2 = driver.find_element_by_css_selector("#KnowYourPan_userNameDetails_firstName")
 	sbox2.send_keys(firstnamesearchterm)
+
+def chromeExtGetPackage(request):
+	q = request.GET.get("q")
+	travelReqObjs = travelReq.objects.filter(placeToVisit__icontains = q)
+	print (travelReqObjs[0].id);
+	packages=[];
+	for t in travelReqObjs:
+		package = travelPackage.objects.filter(travelReqId=t.id).order_by('price');
+		for p in package:
+			obj={
+
+				'id':p.id,
+				'name':p.name,
+				'price':p.price
+			}	
+			packages.append(obj);
+
+	return HttpResponse(json.dumps({"packages": packages}), content_type="application/json")
+		
