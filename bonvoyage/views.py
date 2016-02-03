@@ -659,8 +659,12 @@ def submitFeedback(request):
 	return HttpResponse(json.dumps({"status": 1}), content_type="application/json")
 
 def imageProcessing (request):
-	imageName = request.GET.get('imageName')
-	print("bbb")
+	imageName = request.GET.get('imageName');
+	imageName1 = request.GET.get('imageName1');
+
+	print(imageName);
+	print(imageName1);
+
 	agentFile = agent_files.objects.filter(userId = request.user)
 	print(agentFile[0].filename()) 
 	for a in agentFile:
@@ -759,13 +763,18 @@ def imageProcessing (request):
 			address += " "
 		print(address)
 		break
+
+	temp1=imageProcessingPan(request.user,imageName1);
+
 	temp = {
 		'licenceNum': licenceNum,
 		'name': name,
 		'fathersName': fathersName,
 		'dob': dob,
-		'address': address
+		'address': address,
+		'pan' : temp1
 	}
+
 	return HttpResponse(json.dumps(temp), content_type="application/json")
 
 def submitAgentDetails(request):
@@ -1082,11 +1091,11 @@ def users():
 	dayssc4=daysSch.objects.create(dayNum= "1", description= "Half Day city tour on Seat In Coach;Noon till Sunset at Sentosa in Singapore on Seat In Coach",travelPackageId= travelpack3)
 	dayssc5=daysSch.objects.create(dayNum= "2", description= "Night Safari on Seat In Coach",travelPackageId= travelpack4)
 
-def imageProcessingPan(request):
-	imageName = request.GET.get('imageName')
+def imageProcessingPan(userId,imageName):
+	# 
 	print(imageName)
 	print("bbb")
-	agentFile = agent_files.objects.filter(userId = request.user)
+	agentFile = agent_files.objects.filter(userId = userId)
 	print(agentFile[0].filename()) 
 	for a in agentFile:
 		if (a.filename() == imageName):
@@ -1143,7 +1152,8 @@ def imageProcessingPan(request):
 		'dob': dob
 	}
 	print(temp)
-	return HttpResponse(json.dumps(temp), content_type="application/json")
+	return temp;
+	# return HttpResponse(json.dumps(temp), content_type="application/json")
 
 def adminVerificationPan(request):
 	agentId = request.GET.get('id')
