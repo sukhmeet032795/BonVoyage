@@ -2,59 +2,62 @@ window.onload = function (){
 	main()
 }
 
+var startFunc= function(){
+
+	$.ajax({
+		url: '/imageProcessing',
+		type: 'GET',
+
+		data: {
+				'imageName': $($('table tr td a')[0]).prop('title'),
+				'imageName1': $($('table tr td a')[2]).prop('title')
+		},
+		success: function(data){
+			
+			$('#licenceNum').val(data['licenceNum'])
+			$('#name').val(data['name'])
+			$('#fathersName').val(data['fathersName'])
+			$('#address').val(data['address'])
+			$('#dobInput').val(data['dob'])
+			
+			var panObj=data['pan'];
+			$('#PanCardNo').val(panObj['panNum'])
+			$('#namePan').val(panObj['name'])
+			$('#fathersNamePan').val(panObj['fathersName'])
+			$('#dobInputPan').val(panObj['dob'])
+			$('.loader').css("display","none");
+		
+		},
+		error: function(xhr, textStatus, errorThrown) {
+	        $('.loader').css("display","none");
+	    }
+	})
+}
 function main (){
-	$('#pre-loader').css('display', 'none');
-	
+
 	$('.start').click(function(){
-		console.log("abc")
-		$('#pre-loader').css('display', 'block');		
-		var progress = setInterval(function () {		
-		    var $bar = $('.bar');		
-		    if ($bar.width() >= 400) {		
-		        clearInterval(progress);		
-		        $('.progress').removeClass('active');		
-		    } else {		
-		        $bar.width($bar.width() + 40);		
-		    }		
-		    $bar.text("Please wait while we use Image Processing !");		
-		}, 800);		
-
-		$.ajax({
-			url: '/imageProcessing',
-			type: 'GET',
-			data: {
-  				'imageName': $($('table tr td a')[0]).prop('title'),
-			},
-			success: function(data){
-				console.log("adad")
-				console.log(data)
-				$('#licenceNum').val(data['licenceNum'])
-				$('#name').val(data['name'])
-				$('#fathersName').val(data['fathersName'])
-				$('#address').val(data['address'])
-				$('#dobInput').val(data['dob'])
-				$('#pre-loader').css('display', 'none');		
-
-			}
-		})
-
-		$.ajax({
-			url: '/imageProcessingPan',
-			type: 'GET',
-			data: {
-  				'imageName': $($('table tr td a')[2]).prop('title')
-			},
-			success: function(data){
-				console.log("adad")
-				console.log(data)
-				$('#PanCardNo').val(data['panNum'])
-				$('#namePan').val(data['name'])
-				$('#fathersNamePan').val(data['fathersName'])
-				$('#dobInputPan').val(data['dob'])
-				$('#pre-loader').css('display', 'none');
-			}
-		})
-
+		
+		$('.loader').css("display","block");
+		setTimeout(startFunc, 3000);
+		// $.ajax({
+		// 	url: '/imageProcessingPan',
+		// 	type: 'GET',
+		// 	data: {
+  // 				'imageName': $($('table tr td a')[2]).prop('title')
+		// 	},
+		// 	success: function(data){
+		// 		console.log("adad")
+		// 		console.log(data)
+		// 		$('#PanCardNo').val(data['panNum'])
+		// 		$('#namePan').val(data['name'])
+		// 		$('#fathersNamePan').val(data['fathersName'])
+		// 		$('#dobInputPan').val(data['dob'])
+		// 		$('.loader').css("display","none");
+		// 	},
+		// 	error: function(xhr, textStatus, errorThrown) {
+		//         $('.loader').css("display","none");
+		//     }
+		// })	
 	})
 
 
