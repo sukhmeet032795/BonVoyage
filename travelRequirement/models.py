@@ -16,7 +16,7 @@ class UserDetails(models.Model):
 	type = models.CharField(max_length = 20, choices = typeClass)
 	user = models.OneToOneField(User)
 	is_verified = models.BooleanField(default = False)
-
+	number = models.BigIntegerField(default = 0)
 	def __str__(self):
 		return (str(self.user.first_name) + " " + str(self.user.last_name) + " " + str(self.type));	
 

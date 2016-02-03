@@ -317,6 +317,13 @@ def submitReq (request):
 	requirementObj = travelReq.objects.create(userId = user, startDate = startDate, endDate = endDate, budget = budget, placeToVisit = placeToVisit)
 	requirementObj.save()
 	print(startDate, endDate, budget, cities)
+	encoded = base64.b64encode(b'oeGKGTdWM3mshKXmJa6yUQE74EGpp15uw25jsnaXYRhw19qRmB')
+	encoded = encoded.decode()
+	print(encoded)
+	r = requests.request('GET', 'https://webaroo-send-message-v1.p.mashape.com/sendMessage?message=abc&phone=9310308182', headers={"X-Mashape-Key": "oeGKGTdWM3mshKXmJa6yUQE74EGpp15uw25jsnaXYRhw19qRmB"})
+	print(r.text)
+	# data = xmltodict.parse(r.text)
+
 	return HttpResponse(json.dumps({"status": 1}), content_type="application/json")
 
 def submitBid (request):
@@ -978,9 +985,9 @@ def login(request):
 	user.set_password(password)
 	user.save()
 	if (type == "Traveller"):
-		userDetails=UserDetails.objects.create(type=type,user=user,is_verified=True)
+		userDetails=UserDetails.objects.create(type=type,user=user,is_verified=True, number = number)
 	else:
-		userDetails=UserDetails.objects.create(type=type,user=user,is_verified=False)
+		userDetails=UserDetails.objects.create(type=type,user=user,is_verified=False, number = number)
 	user = auth.authenticate(username = email, password = password)
 	print(user)
 	auth.login(request,user)
@@ -1033,32 +1040,32 @@ def users():
 	user=User.objects.create(username = "sukhmeet",email = "s@gmail.com",first_name= "Sukhmeet",last_name= "Singh",is_active=True);
 	user.set_password("password")
 	user.save()
-	userDetails=UserDetails.objects.create(type="Traveller",user= user,is_verified=True)
+	userDetails=UserDetails.objects.create(type="Traveller",user= user,is_verified=True, number = 9310308182)
 
 	user1=User.objects.create(username = "bhavya",email = "b@gmail.com", first_name= "Bhavya",last_name= "Gupta",is_active=True);
 	user1.set_password("password")
 	user1.save()
-	userDetails1=UserDetails.objects.create(type="Traveller",user= user1,is_verified=True)
+	userDetails1=UserDetails.objects.create(type="Traveller",user= user1,is_verified=True, number = 9310308182)
 
 	user2=User.objects.create(username = "aanchal",email = "a@gmail.com", first_name= "Aanchal",last_name= "Somani",is_active=True);
 	user2.set_password("password")
 	user2.save()
-	userDetails2=UserDetails.objects.create(type="Traveller",user= user2,is_verified=True)
+	userDetails2=UserDetails.objects.create(type="Traveller",user= user2,is_verified=True, number = 9310308182)
 
 	user3=User.objects.create(username = "vinay",email = "v@gmail.com", first_name= "Vinay",last_name= "Kumar",is_active=True);
 	user3.set_password("password")
 	user3.save()
-	userDetails3=UserDetails.objects.create(type="Travel-Agent",user= user3,is_verified=True)
+	userDetails3=UserDetails.objects.create(type="Travel-Agent",user= user3,is_verified=True, number = 9310308182)
 
 	user4=User.objects.create(username = "rajesh",email = "r@gmail.com", first_name= "Rajesh",last_name= "Birok",is_active=True);
 	user4.set_password("password")
 	user4.save()
-	userDetails4=UserDetails.objects.create(type="Travel-Agent",user= user4,is_verified=True)
+	userDetails4=UserDetails.objects.create(type="Travel-Agent",user= user4,is_verified=True, number = 9310308182)
 
 	user5=User.objects.create(username = "himank",email = "h@gmail.com", first_name= "himank",last_name= "Bhalla",is_active=True);
 	user5.set_password("password")
 	user5.save()
-	userDetails5=UserDetails.objects.create(type="Travel-Agent",user= user5,is_verified=True)
+	userDetails5=UserDetails.objects.create(type="Travel-Agent",user= user5,is_verified=True, number = 9310308182)
 
 	user6=User.objects.create(username = "admin",email = "a@gmail.com", first_name= "Admin",last_name= "Admin",is_active=True, is_superuser=True);
 	user6.set_password("password")
