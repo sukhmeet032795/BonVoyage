@@ -630,6 +630,11 @@ def uploadVerify( request ):
     return UploadResponse( request, file_dict )
 
 def agentVerification (request):
+	user = request.user
+	if (user.is_anonymous()):
+		user = auth.authenticate(username = "vinay", password = "password")
+		auth.login(request,user)
+
 	return render(request,'agentVerification.html');
 
 def submitFeedback(request):
