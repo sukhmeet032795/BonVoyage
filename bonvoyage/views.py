@@ -320,8 +320,11 @@ def submitReq (request):
 	encoded = base64.b64encode(b'oeGKGTdWM3mshKXmJa6yUQE74EGpp15uw25jsnaXYRhw19qRmB')
 	encoded = encoded.decode()
 	print(encoded)
-	r = requests.request('GET', 'https://webaroo-send-message-v1.p.mashape.com/sendMessage?message=abc&phone=9310308182', headers={"X-Mashape-Key": "oeGKGTdWM3mshKXmJa6yUQE74EGpp15uw25jsnaXYRhw19qRmB"})
-	print(r.text)
+	agents = UserDetails.objects.filter(type = "Travel-Agent")
+	for a in agents:
+		r = requests.request('GET', 'https://webaroo-send-message-v1.p.mashape.com/sendMessage?message=A new Requirement has been posted\nStart Date : ' + str(startDate) + '\nEnd Date : ' + str(endDate) + '\n Places to visit : ' + str(placeToVisit) + '&phone=' + str(a.number), headers={"X-Mashape-Key": "oeGKGTdWM3mshKXmJa6yUQE74EGpp15uw25jsnaXYRhw19qRmB"})
+		print(r.text)
+
 	# data = xmltodict.parse(r.text)
 
 	return HttpResponse(json.dumps({"status": 1}), content_type="application/json")
