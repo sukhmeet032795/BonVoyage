@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.utils import timezone
-
+from django.db.models import Q
 from django.core import serializers
 
 from travelRequirement.models import *
@@ -324,7 +324,7 @@ def submitReq (request):
 	print(encoded)
 	agents = UserDetails.objects.filter(type = "Travel-Agent")
 	for a in agents:
-		r = requests.request('GET', 'https://webaroo-send-message-v1.p.mashape.com/sendMessage?message=A new Requirement has been posted\nStart Date : ' + str(startDate) + '\nEnd Date : ' + str(endDate) + '\n Places to visit : ' + str(placeToVisit) + '&phone=' + str(a.number), headers={"X-Mashape-Key": "oeGKGTdWM3mshKXmJa6yUQE74EGpp15uw25jsnaXYRhw19qRmB"})
+		# r = requests.request('GET', 'https://webaroo-send-message-v1.p.mashape.com/sendMessage?message=A new Requirement has been posted\nStart Date : ' + str(startDate) + '\nEnd Date : ' + str(endDate) + '\n Places to visit : ' + str(placeToVisit) + '&phone=' + str(a.number), headers={"X-Mashape-Key": "oeGKGTdWM3mshKXmJa6yUQE74EGpp15uw25jsnaXYRhw19qRmB"})
 		print(r.text)
 
 	# data = xmltodict.parse(r.text)
@@ -362,7 +362,7 @@ def makePackage (request):
 
 def getAirports (request):
 	arr = []
-	for a in airportDetails.objects.filter(city__icontains=request.GET.get('q')):
+	for a in airportDetails.objects.filter(Q(city__icontains=request.GET.get('q')) | Q(code__icontains=request.GET.get('q')) | Q(country__icontains=request.GET.get('q')) | Q(name__icontains=request.GET.get('q'))):
 		arr.append(a.code + " " + a.name + " " + a.city + " " + a.country)
 
 	return HttpResponse(json.dumps({"data": {"airport":arr}}), content_type="application/json")
