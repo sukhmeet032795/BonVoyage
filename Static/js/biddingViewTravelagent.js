@@ -52,10 +52,12 @@ function main(){
 
 	$('#bid').click(function(){
 
+		console.log("hi");
 		var value=$('.bidvalue').val();
 		var element=$('.panel_price_righttop').find('a');
 		var id=$(element).attr("id");
 		
+		console.log(value,id);
 		$.ajax({
 			type: 'GET',
 			url: '/submitBid',
