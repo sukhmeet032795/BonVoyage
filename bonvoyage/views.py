@@ -538,7 +538,7 @@ def getConditions(request):
 	else:
 		year = "2015"
 	# isoObj.code
-	encoded = base64.b64encode(b'lhjwdOWWyW8gIysExeXk-6clGoWLol3gLadUmq5y:bhavya')
+	encoded = base64.b64encode(b'uhn0gPF1KkpFvxwFKH02zyLEGKP50diHdsyTlf_o:')
 	encoded = encoded.decode()
 	r=requests.request('GET', "https://api.qalendra.com/assets?date=" + year + "-" + startDate + "-28&countryCode=" + isoObj.code + "&perPage=50", headers={"Authorization": "Basic " + encoded});
 	jsonCondition = json.loads(r.text)
@@ -1082,8 +1082,8 @@ def users():
 	travelpack1=travelPackage.objects.create(travelReqId= travelreq1,userId= user3,name= "USA",price= "650000")
 	print(travelpack1)
 	travelpack2=travelPackage.objects.create(travelReqId= travelreq2,userId= user3,name= "Europe",price= "650000")
-	travelpack3=travelPackage.objects.create(travelReqId= travelreq1,userId= user4,name= "USA Tour",price= "750000")
-	travelpack4=travelPackage.objects.create(travelReqId= travelreq1,userId= user5,name= "United States",price= "700000")
+	travelpack3=travelPackage.objects.create(travelReqId= travelreq1,userId= user4,name= "USA Tour",price= "652000")
+	travelpack4=travelPackage.objects.create(travelReqId= travelreq1,userId= user5,name= "United States",price= "655000")
 
 	airportdet=flightDetails.objects.create(fromPlace = "DEL Indira Gandhi Intl Delhi India",toPlace = "Boston South Station Boston United States",type = "Economic", travelPackageId =travelpack1 )
 	airportdet1=flightDetails.objects.create(fromPlace = "Boston South Station Boston United States",toPlace = "YCG Castlegar Castlegar Canada",type = "Economic", travelPackageId = travelpack1)
