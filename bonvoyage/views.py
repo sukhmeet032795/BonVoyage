@@ -247,6 +247,7 @@ def userRequirement(request):
 
 def bid_agent(request):
 	
+	print("hi");
 	user=request.user;
 	id=request.GET.get("q");
 	travelreq= travelReq.objects.filter(id=id)[0];
@@ -287,7 +288,8 @@ def bid_agent(request):
 			'BidPrice':p.bidPrice,
 			'Discount':discount,
 			'yser':user,
-			'Savings':savings
+			'Savings':savings,
+			'newPrice':newPrice
 		}
 		packageArray.append(obj);
 	print(packageArray)
@@ -334,16 +336,17 @@ def submitBid (request):
 	value = request.GET.get('value')
 	id = request.GET.get('id')
 	package=travelPackage.objects.filter(id=id)[0];
-	package.bidPrice=value;
+	package.bidPrice=int(package.bidPrice)+int(value);
 	package.save();
 	return HttpResponse(json.dumps({"status": 1}), content_type="application/json")	
 
 def packageDetails(request):
 	id = request.GET.get('id')
 	package=travelPackage.objects.filter(id=id)[0];
+	newPrice=(int(package.price)-int(package.bidPrice));
 	data={
 
-		'Price':package.price,
+		'Price':newPrice,
 		'Bid':package.bidPrice
 	}
 	return HttpResponse(json.dumps(data), content_type="application/json")	
