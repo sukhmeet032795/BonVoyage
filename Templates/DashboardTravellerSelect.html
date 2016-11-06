@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		{% load static %}
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<title>Bon Voyage</title>
-	 	<link rel="shortcut icon" type="image/x-icon" href="{{STATIC_URL}}images/favicon.ico" />
-		<link rel="stylesheet" href="{{STATIC_URL}}css/DashboardTravellerSelect.css">
+	 	<link rel="shortcut icon" type="image/x-icon" href="{% static "images/favicon.ico" %}" />
+		<link rel="stylesheet" href="{% static "css/DashboardTravellerSelect.css" %}">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
 
 		<link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
@@ -17,7 +18,7 @@
 	<body>
 		<nav class='row brown darken-4 container-nav' style="height: 70px">
 			<div class="nav-wrapper col s3" style="padding-left:0px">
-				<image src='{{STATIC_URL}}images/logo_custom.jpg' class="imageClass">
+				<image src='{% static "images/logo_custom.jpg" %}' class="imageClass">
 				<a href="#" class="brand-logo">Bon Voyage</a>
 			</div>
 			<div class="right col s6 offset-s3">
@@ -152,8 +153,8 @@
 			</div>
 		</div>
 		<!--Confirmation Portion Ends-->	
-		<script src="{{STATIC_URL}}js/jquery-1.11.1.min.js"></script>	
-		<script src="{{STATIC_URL}}js/DashboardTravellerSelect.js"></script>
+		<script src="{% static "js/jquery-1.11.1.min.js" %}"></script>	
+		<script src="{% static "js/DashboardTravellerSelect.js" %}"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min.js"></script>
 	</body>
 </html>

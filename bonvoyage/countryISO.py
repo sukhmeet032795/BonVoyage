@@ -5,7 +5,7 @@ import settings
 conn = pymysql.connect(host=settings.DATABASES['default']['HOST'], port=int(settings.DATABASES['default']['PORT']), user=settings.DATABASES['default']['USER'], passwd=settings.DATABASES['default']['PASSWORD'], db=settings.DATABASES['default']['NAME'],autocommit='true')
 cur = conn.cursor()
 
-book = xlrd.open_workbook('/home/bhavya/web/bon-voyage/bonvoyage/bonvoyage/country_code_web.xls')
+book = xlrd.open_workbook('/home/sukhmeet032795/Major/BonVoyage/bonvoyage/country_code_web.xls')
 
 # print number of sheets
 print(book.nsheets)

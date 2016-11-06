@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		{% load static %}
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<title>Bon Voyage</title>
-	 	<link rel="shortcut icon" type="image/x-icon" href="{{STATIC_URL}}images/favicon.ico" />
-		<link rel="stylesheet" href="..{{STATIC_URL}}css/agentVerification.css">
-		<link rel="stylesheet" href="..{{STATIC_URL}}css/bootstrap-datetimepicker.min.css">
+	 	<link rel="shortcut icon" type="image/x-icon" href="{% static "images/favicon.ico" %}" />
+		<link rel="stylesheet" href="{% static "css/agentVerification.css" %}">
+		<link rel="stylesheet" href="{% static "css/bootstrap-datetimepicker.min.css" %}">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 	
-		<script src="..{{STATIC_URL}}js/jquery-1.11.1.min.js"></script>
-		<script type="text/javascript" src="{{STATIC_URL}}js/moment.js"></script>
+		<script src="{% static "js/jquery-1.11.1.min.js" %}"></script>
+		<script type="text/javascript" src="{% static "js/moment.js" %}"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap-datetimepicker.js"></script>
-		<script src="..{{STATIC_URL}}js/agentVerification.js"></script>
+		<script type="text/javascript" src="{% static "js/bootstrap-datetimepicker.js" %}"></script>
+		<script src="{% static "js/agentVerification.js" %}"></script>
 
 		
 	</head>
@@ -24,7 +25,7 @@
 				  <div class="container-fluid nav-container">
 				    <!-- Brand and toggle get grouped for better mobile display -->
 				    <div class="navbar-header">
-				      <a class="navbar-brand" href="#"><image src="{{STATIC_URL}}images/logo_custom.jpg"></a>
+				      <a class="navbar-brand" href="#"><image src="{% static "images/logo_custom.jpg" %}"></a>
 				    </div>
 
 				    <!-- Collect the nav links, forms, and other content for toggling -->
